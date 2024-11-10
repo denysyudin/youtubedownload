@@ -1,16 +1,16 @@
 const express = require("express");
 const ytdl = require("ytdl-core");
 const ffmpeg = require("fluent-ffmpeg");
+const cors = require("cors");
 const fs = require("fs");
 const path = require("path");
 
 const app = express();
 const port = process.env.PORT || 5000;
 
-const cors = require("cors");
 app.use(cors());
 
-app.get("/yt/test", (req, res) => {
+app.get("/test", (req, res) => {
   res.status(200).json("server is running");
 });
 
