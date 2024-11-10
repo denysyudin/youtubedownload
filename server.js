@@ -13,16 +13,13 @@ const port = process.env.PORT || 5000;
 const cors = require("cors");
 app.use(cors());
 
-// Test route
 app.get("/test", (req, res) => {
   res.status(200).json("Server is running");
 });
 
-// Video download and slice route
 app.get("/api/downloadYoutubeSlice", (req, res) => {
   const { youtubeVideoId, startTime, endTime } = req.query;
 
-  // Validate input
   if (!youtubeVideoId || !startTime || !endTime) {
     return res.status(400).json({
       error: "youtubeVideoId, startTime, and endTime are required",
@@ -81,7 +78,6 @@ app.get("/api/downloadYoutubeSlice", (req, res) => {
   });
 });
 
-// Start the server
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
 });
