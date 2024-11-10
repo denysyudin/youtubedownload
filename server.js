@@ -1,8 +1,6 @@
 const express = require('express');
 const ytdl = require('ytdl-core');
 const ffmpeg = require('fluent-ffmpeg');
-const ffmpegPath = './ffmpeg'; // Make sure this path is correct
-ffmpeg.setFfmpegPath(ffmpegPath);
 const fs = require('fs');
 const path = require('path');
 
