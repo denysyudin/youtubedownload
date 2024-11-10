@@ -1,39 +1,42 @@
 const express = require('express');
 const ytdl = require('ytdl-core');
 const ffmpeg = require('fluent-ffmpeg');
-const ffmpegPath = require('ffmpeg-static');
+const ffmpegPath = './ffmpeg'; // Make sure this path is correct
 ffmpeg.setFfmpegPath(ffmpegPath);
 const fs = require('fs');
 const path = require('path');
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 5000;
 
 // Set ffmpeg path for fluent-ffmpeg
 ffmpeg.setFfmpegPath(ffmpegPath);
 
-const { exec } = require('child_process');
-
-app.get('/api/check-ffmpeg', (req, res) => {
-  exec('which ffmpeg', (error, stdout, stderr) => {
-    if (error) {
-      console.error(`exec error: ${error}`);
-      return res.status(500).send('FFmpeg is not installed or accessible');
-    }
-    res.send(`FFmpeg is accessible at: ${stdout}`);
-  });
+app.get('/test', (req, res) => {
+  res.status(200).send("server is running");
+  console.log('test');
 });
 
 // Route to download and trim YouTube video
 app.get('/api/downloadYoutubeSlice', async (req, res) => {
   const { youtubeVideoId, startTime, endTime } = req.query;
 
+  // Check if the necessary parameters are provided
   if (!youtubeVideoId || !startTime || !endTime) {
     return res.status(400).send('Missing youtubeVideoId, startTime, or endTime');
   }
 
+  // Parse startTime and endTime as numbers
+  const start = parseFloat(startTime);
+  const end = parseFloat(endTime);
+
+  // Validate the parsed values
+  if (isNaN(start) || isNaN(end) || start >= end) {
+    return res.status(400).send('Invalid startTime or endTime');
+  }
+
   const videoUrl = `https://www.youtube.com/watch?v=${youtubeVideoId}`;
-  const outputFilePath = path.resolve(__dirname, `${youtubeVideoId}_${startTime}_${endTime}.mp4`);
+  const outputFilePath = path.resolve(__dirname, `${youtubeVideoId}_${start}_${end}.mp4`);
 
   try {
     // Download video stream with high quality
@@ -41,8 +44,8 @@ app.get('/api/downloadYoutubeSlice', async (req, res) => {
 
     // Process video using ffmpeg to trim
     ffmpeg(videoStream)
-      .setStartTime(startTime)
-      .setDuration(endTime - startTime)
+      .setStartTime(start)
+      .setDuration(end - start)
       .output(outputFilePath)
       .on('end', () => {
         res.download(outputFilePath, (err) => {
