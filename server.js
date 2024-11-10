@@ -10,7 +10,7 @@ const port = process.env.PORT || 5000;
 const cors = require("cors");
 app.use(cors());
 
-app.get("/test", (req, res) => {
+app.get("/yt/test", (req, res) => {
   res.status(200).json("server is running");
 });
 
