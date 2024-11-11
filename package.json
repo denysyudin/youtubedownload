@@ -12,6 +12,7 @@
     "ytdl-core": "^4.11.5"
   },
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+    "build": "pip install yt-dpl"
   }
 }
