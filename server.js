@@ -30,7 +30,7 @@ app.get("/api/downloadYoutubeSlice", (req, res) => {
   const tempFilePath = path.resolve(__dirname, `${youtubeVideoId}.mp4`);
   const outputFilePath = path.resolve(__dirname, `${youtubeVideoId}-sliced.mp4`);
 
-  const downloadCommand = `yt-dlp -o "${tempFilePath}" "${videoURL}"`;
+  const downloadCommand = `yt-dlp -f mp4 "${videoURL}" -o "${tempFilePath}"`;
 
   exec(downloadCommand, (error, stdout, stderr) => {
     if (error) {
